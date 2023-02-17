@@ -1,14 +1,7 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import "./textarea.css"
 import { db } from "../../firebase"
-import {
-  collection,
-  updateDoc,
-  doc,
-  deleteDoc,
-  onSnapshot,
-  addDoc,
-} from "firebase/firestore"
+import { collection, updateDoc, doc, onSnapshot } from "firebase/firestore"
 
 export default function Textarea() {
   const notesCollection = collection(db, "Notes")
@@ -17,12 +10,21 @@ export default function Textarea() {
   const [notes, setNotes] = useState([])
 
   function updateHeading(e) {
-    setHeadingValue(e.target.value)
     notes.forEach(async (note) => {
       if (note.data.active) {
         await updateDoc(doc(db, "Notes", note.id), { heading: headingValue })
       }
     })
+    setHeadingValue(e.target.value)
+  }
+
+  function updateText(e) {
+    notes.forEach(async (note) => {
+      if (note.data.active) {
+        await updateDoc(doc(db, "Notes", note.id), { text: textValue })
+      }
+    })
+    setTextValue(e.target.value)
   }
 
   useEffect(() => {
@@ -35,16 +37,13 @@ export default function Textarea() {
   }, [notes])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(notesCollection, (snapshot) => {
+    onSnapshot(notesCollection, (snapshot) => {
       setNotes(
         snapshot.docs.map((doc) => {
           return { data: doc.data(), id: doc.id }
         })
       )
     })
-    return () => {
-      unsubscribe()
-    }
   }, [])
 
   return (
@@ -57,7 +56,7 @@ export default function Textarea() {
         placeholder="Title"
       />
       <textarea
-        onChange={(e) => setTextValue(e.target.value)}
+        onChange={(e) => updateText(e)}
         value={textValue}
         placeholder="Enter Your Note"
         className="textarea"

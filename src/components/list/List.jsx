@@ -9,7 +9,6 @@ import {
   onSnapshot,
   addDoc,
 } from "firebase/firestore"
-import { async } from "@firebase/util"
 
 export default function List() {
   const notesCollection = collection(db, "Notes")
@@ -50,7 +49,7 @@ export default function List() {
     return () => {
       unsubscribe()
     }
-  }, [])
+  }, [notesCollection])
 
   return (
     <div className="list">
