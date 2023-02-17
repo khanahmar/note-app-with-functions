@@ -1,0 +1,47 @@
+.list {
+  width: 20%;
+  overflow-y: scroll;
+  background-color: rgb(218, 236, 240);
+}
+
+.listBtn {
+  width: 100%;
+  padding: 10px 4px;
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 4px solid green;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: #daecf0;
+}
+
+.listBtn button {
+  font-size: 17px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 4px;
+  margin: 2px 4px;
+  cursor: pointer;
+  background-color: green;
+  color: white;
+}
+
+.listBtn button:hover {
+  background-color: rgb(0, 149, 0);
+}
+
+.listItems p {
+  font-size: 20px;
+  padding: 14px 4px;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.listItems p:hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
