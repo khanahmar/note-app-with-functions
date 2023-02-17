@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import "./textarea.css"
 import { db } from "../../firebase"
 import {
@@ -14,9 +14,25 @@ export default function Textarea() {
   const notesCollection = collection(db, "Notes")
   const [headingValue, setHeadingValue] = useState("")
   const [textValue, setTextValue] = useState("")
-  const [notes, setNotes] = useState("")
+  const [notes, setNotes] = useState([])
 
-  // setHeadingValue(notes.filter((note) => note.data.active === true))
+  function updateHeading(e) {
+    setHeadingValue(e.target.value)
+    notes.forEach(async (note) => {
+      if (note.data.active) {
+        await updateDoc(doc(db, "Notes", note.id), { heading: headingValue })
+      }
+    })
+  }
+
+  useEffect(() => {
+    notes.forEach((note) => {
+      if (note.data.active === true) {
+        setHeadingValue(note.data.heading)
+        setTextValue(note.data.text)
+      }
+    })
+  }, [notes])
 
   useEffect(() => {
     const unsubscribe = onSnapshot(notesCollection, (snapshot) => {
@@ -34,7 +50,7 @@ export default function Textarea() {
   return (
     <div className="textareaContainer">
       <input
-        onChange={(e) => setHeadingValue(e.target.value)}
+        onChange={(e) => updateHeading(e)}
         value={headingValue}
         className="textareaHeader"
         type="text"
