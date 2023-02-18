@@ -10,21 +10,22 @@ export default function Textarea() {
   const [notes, setNotes] = useState([])
 
   function updateHeading(e) {
+    setHeadingValue(e.target.value)
     notes.forEach(async (note) => {
       if (note.data.active) {
         await updateDoc(doc(db, "Notes", note.id), { heading: headingValue })
       }
     })
-    setHeadingValue(e.target.value)
   }
 
+
   function updateText(e) {
+    setTextValue(e.target.value)
     notes.forEach(async (note) => {
       if (note.data.active) {
         await updateDoc(doc(db, "Notes", note.id), { text: textValue })
       }
     })
-    setTextValue(e.target.value)
   }
 
   useEffect(() => {

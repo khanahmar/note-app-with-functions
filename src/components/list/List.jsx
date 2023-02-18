@@ -10,11 +10,15 @@ import {
   addDoc,
 } from "firebase/firestore"
 
-export default function List() {
+export default function List({ data }) {
   const notesCollection = collection(db, "Notes")
   const [notes, setNotes] = useState([])
+  const [arrandedNotes, setArrangedNotes] = useState([])
+  const [currentId, setCurrentId] = useState("")
 
   function changeActive(id) {
+    setCurrentId(id)
+    data(id)
     const document = doc(db, "Notes", id)
     notes.forEach(async (note) => {
       if (note.id === id) {
@@ -24,6 +28,20 @@ export default function List() {
         await updateDoc(document, { active: false, currentId: note.id })
       }
     })
+  }
+
+  function arrangeData() {
+    setArrangedNotes((prevNote) =>
+      prevNote.sort((a, b) => {
+        if (a.id === currentId) {
+          return -1
+        } else if (b.id === currentId) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+    )
   }
 
   async function addNote() {
@@ -46,10 +64,12 @@ export default function List() {
         })
       )
     })
+    arrangeData()
+
     return () => {
       unsubscribe()
     }
-  }, [notesCollection])
+  }, [currentId])
 
   return (
     <div className="list">
